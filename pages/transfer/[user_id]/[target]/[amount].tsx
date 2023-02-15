@@ -6,13 +6,14 @@ import { useRouter } from 'next/router';
 import { PublicKey, Transaction } from '@solana/web3.js';
 import { SPL_TOKEN_ADDRESS } from '@/config';
 import { getAssociatedTokenAddress, createTransferCheckedInstruction, getMint } from '@solana/spl-token';
+import axios from 'axios';
 
 
 export default function Home() {
   const wallet = useWallet();
   const router = useRouter();
   const { connection } = useConnection();
-  const { target, amount } = router.query;
+  const { target, userId, amount } = router.query;
 
   const transfer = useCallback(async (target: string, amount: number) => {
     if (!wallet.publicKey) return;
@@ -40,11 +41,17 @@ export default function Home() {
         const txSignature = await wallet.sendTransaction(transaction, connection);
         await connection.confirmTransaction(txSignature, "confirmed");
         console.log(txSignature);
+
+        await axios.post('/api/transfer-success', {
+          userId,
+          amount,
+          targetUserId: target,
+        });
       }
     } catch (error) {
       console.log(error);
     }
-  }, [wallet, connection]);
+  }, [wallet, connection, userId]);
 
 
   useEffect(() => {
