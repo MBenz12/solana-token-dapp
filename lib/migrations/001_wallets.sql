@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS wallets (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user_id VARCHAR(255) NULL,
+    wallet_address VARCHAR(255) NULL
+)
