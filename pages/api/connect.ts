@@ -10,10 +10,12 @@ export default async function handler(
     const body = JSON.parse(req.body);
     const { walletAddress, userId } = body;
 
-    await excuteQuery({
-        query: 'INSERT INTO wallets (user_id, wallet_address) VALUES(?, ?)',
+    const result = await excuteQuery({
+        query: `INSERT INTO wallets (user_id, wallet_address) VALUES(?, ?) ON DUPLICATE KEY UPDATE user_id=VALUES(user_id), wallet_address=VALUES(wallet_address)`,
         values: [userId, walletAddress],
     });
+
+    console.log(result)
 
     res.status(200).json("success")
 }
