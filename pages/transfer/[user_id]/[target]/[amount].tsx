@@ -1,59 +1,74 @@
-import Head from 'next/head'
-import { WalletModalButton, WalletMultiButton } from '@solana/wallet-adapter-react-ui'
-import { useConnection, useWallet } from '@solana/wallet-adapter-react'
-import { useCallback, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { PublicKey, Transaction } from '@solana/web3.js';
-import { SPL_TOKEN_ADDRESS } from '@/config';
-import { getAssociatedTokenAddress, createTransferCheckedInstruction, getMint } from '@solana/spl-token';
-import axios from 'axios';
-
+import Head from "next/head";
+import {
+  WalletModalButton,
+  WalletMultiButton,
+} from "@solana/wallet-adapter-react-ui";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useCallback, useEffect } from "react";
+import { useRouter } from "next/router";
+import { PublicKey, Transaction } from "@solana/web3.js";
+import { SPL_TOKEN_ADDRESS } from "@/config";
+import {
+  getAssociatedTokenAddress,
+  createTransferCheckedInstruction,
+  getMint,
+} from "@solana/spl-token";
+import axios from "axios";
 
 export default function Home() {
   const wallet = useWallet();
   const router = useRouter();
   const { connection } = useConnection();
-  const { target, userId, amount } = router.query;
+  const { target, user_id: userId, amount } = router.query;
 
-  const transfer = useCallback(async (target: string, amount: number) => {
-    if (!wallet.publicKey) return;
+  const transfer = useCallback(
+    async (target: string, amount: number) => {
+      if (!wallet.publicKey) return;
 
-    try {
-      const mint = new PublicKey(SPL_TOKEN_ADDRESS);
-      const { data: walletAddress } = await axios.get(`/api/wallet/${target}`);
-      const targetAddress = new PublicKey(walletAddress);
-      const { decimals } = await getMint(connection, mint);
-
-      const targetAta = await getAssociatedTokenAddress(mint, targetAddress);
-      const { value: { uiAmount } } = await connection.getTokenAccountBalance(targetAta);
-      if (uiAmount !== null) {
-        const transaction = new Transaction();
-        transaction.add(
-          createTransferCheckedInstruction(
-            wallet.publicKey,
-            mint,
-            targetAddress,
-            wallet.publicKey,
-            amount * Math.pow(10, decimals),
-            decimals
-          )
+      try {
+        const mint = new PublicKey(SPL_TOKEN_ADDRESS);
+        const { data: walletAddress } = await axios.get(
+          `/api/wallet/${target}`
         );
+        const targetAddress = new PublicKey(walletAddress);
+        const { decimals } = await getMint(connection, mint);
 
-        const txSignature = await wallet.sendTransaction(transaction, connection);
-        await connection.confirmTransaction(txSignature, "confirmed");
-        console.log(txSignature);
+        const targetAta = await getAssociatedTokenAddress(mint, targetAddress);
+        const {
+          value: { uiAmount },
+        } = await connection.getTokenAccountBalance(targetAta);
+        if (uiAmount !== null) {
+          const transaction = new Transaction();
+          transaction.add(
+            createTransferCheckedInstruction(
+              wallet.publicKey,
+              mint,
+              targetAddress,
+              wallet.publicKey,
+              amount * Math.pow(10, decimals),
+              decimals
+            )
+          );
 
-        await axios.post('/api/transfer-success', {
-          userId,
-          amount,
-          targetUserId: target,
-        });
+          const txSignature = await wallet.sendTransaction(
+            transaction,
+            connection
+          );
+          await connection.confirmTransaction(txSignature, "confirmed");
+          console.log(txSignature);
+
+          await axios.post("/api/transfer-success", {
+            userId,
+            amount,
+            targetUserId: target,
+          });
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [wallet, connection, userId]);
-
+    },
+    [wallet, connection, userId]
+  );
 
   useEffect(() => {
     if (!target || !amount) return;
@@ -70,10 +85,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="min-h-screen flex items-center justify-center">
-        <div className='flex'>
+        <div className="flex">
           {!wallet.publicKey ? <WalletModalButton /> : <WalletMultiButton />}
         </div>
       </main>
     </>
-  )
+  );
 }

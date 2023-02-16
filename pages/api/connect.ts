@@ -13,11 +13,7 @@ export default async function handler(
         query: `INSERT INTO wallets (user_id, wallet_address) VALUES(?, ?) ON DUPLICATE KEY UPDATE user_id=VALUES(user_id), wallet_address=VALUES(wallet_address)`,
         values: [userId, walletAddress],
     });
-    const thanos = client.users.fetch(userId);
-    thanos.then(async (user) => {
-        await user.send(`You connected wallet: ${walletAddress}`);
-    }).catch(async () => {
-        console.log("Error")
-    });
+    const thanos = await client.users.fetch(userId);
+    thanos.send(`You connected wallet: ${walletAddress}`);
     res.status(200).json("success")
 }

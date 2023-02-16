@@ -8,18 +8,10 @@ export default async function handler(
 ) {
     const { userId, targetUserId, amount } = req.body;
 
-    const thanos = client.users.fetch(targetUserId);
-    const targetThanos = client.users.fetch(userId);
-    thanos.then(async (user) => {
-        await user.send(`You sent ${amount} to ${(await targetThanos).username}`);
-    }).catch(async () => {
-        console.log("Error")
-    });
-    targetThanos.then(async (user) => {
-        await user.send(`${amount} received from ${await (await thanos).username}`);
-    }).catch(async () => {
-        console.log("Error")
-    });
+    const thanos = await client.users.fetch(userId);
+    const targetThanos = await client.users.fetch(targetUserId);
+    await thanos.send(`You sent ${amount} to <@${targetThanos.id}>`);
+    await targetThanos.send(`${amount} received from <@${thanos.id}>`);
 
     res.status(200).json("success")
 }
