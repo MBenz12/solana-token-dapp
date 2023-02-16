@@ -20,7 +20,8 @@ export default function Home() {
 
     try {
       const mint = new PublicKey(SPL_TOKEN_ADDRESS);
-      const targetAddress = new PublicKey(target);
+      const { data: walletAddress } = await axios.get(`/api/wallet/${target}`);
+      const targetAddress = new PublicKey(walletAddress);
       const { decimals } = await getMint(connection, mint);
 
       const targetAta = await getAssociatedTokenAddress(mint, targetAddress);

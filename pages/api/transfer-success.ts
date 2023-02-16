@@ -6,19 +6,17 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<string>
 ) {
-
-    const body = JSON.parse(req.body);
-    const { userId, targetUserId, amount } = body;
+    const { userId, targetUserId, amount } = req.body;
 
     const thanos = client.users.fetch(targetUserId);
     const targetThanos = client.users.fetch(userId);
     thanos.then(async (user) => {
-        await user.send(`You sent ${amount} to ${targetUserId}`);
+        await user.send(`You sent ${amount} to ${(await targetThanos).username}`);
     }).catch(async () => {
         console.log("Error")
     });
     targetThanos.then(async (user) => {
-        await user.send(`${amount} received from ${userId}`);
+        await user.send(`${amount} received from ${await (await thanos).username}`);
     }).catch(async () => {
         console.log("Error")
     });

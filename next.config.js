@@ -4,14 +4,13 @@ const nextConfig = {
     env: {
         'MYSQL_HOST': 'localhost',
         'MYSQL_PORT': '3306',
-        'MYSQL_DATABASE': "sys",
+        'MYSQL_DATABASE': "discord-bot",
         'MYSQL_USER': "root",
         'MYSQL_PASSWORD': "root",
 
-        'BOT_TOKEN': 'MTAzMTM5NjQ2MDk3OTI5ODM1NA.GYwEX8.0ERN6xQN9Ph3gGnOgQDOVdwAZkGTdKtyiGRzFs',
-        'CLIENT_ID': '1031396460979298354',
-        'CLIENT_SECRET': 'JtaGNp_4-CAQ0uRo5Nd8eu4sxVszIICA',
-        'GUILD_ID': '753961498367492118',
+        'BOT_TOKEN': 'MTA3NDcxMDkwNDYxNDE2NjU1OA.GUhc3I.PtsxxmGzEC8x-sC6BfTCkSvsukOlovMzA1dEOk',
+        'CLIENT_ID': '1074710904614166558',
+        'GUILD_ID': '980666668802007080',
 
         'DOMAIN': 'http://localhost:3000',
     }

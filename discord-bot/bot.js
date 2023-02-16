@@ -27,7 +27,7 @@ client.on('interactionCreate', async interaction => {
     }
     if (interaction.commandName === 'transfer') {
         const userId = interaction.user.id;
-        const targetUserId = interaction.options.get("user-id").value;
+        const targetUserId = interaction.options.get("user-id").user.id;
         const amount = interaction.options.get("amount").value;
         await interaction.reply(`${DOMAIN}/transfer/${userId}/${targetUserId}/${amount}`);
     }
