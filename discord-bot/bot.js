@@ -23,7 +23,7 @@ client.on('interactionCreate', async interaction => {
     if (!interaction.isChatInputCommand()) return;
 
     if (interaction.commandName === 'connect-wallet') {
-        await interaction.reply(`${DOMAIN}/connect/${interaction.user.id}`);
+        await interaction.reply(`${DOMAIN}/connect`);
     }
     if (interaction.commandName === 'transfer') {
         const userId = interaction.user.id;

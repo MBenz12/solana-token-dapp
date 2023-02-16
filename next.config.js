@@ -10,6 +10,7 @@ const nextConfig = {
 
         'BOT_TOKEN': 'MTAzMTM5NjQ2MDk3OTI5ODM1NA.GYwEX8.0ERN6xQN9Ph3gGnOgQDOVdwAZkGTdKtyiGRzFs',
         'CLIENT_ID': '1031396460979298354',
+        'CLIENT_SECRET': 'JtaGNp_4-CAQ0uRo5Nd8eu4sxVszIICA',
         'GUILD_ID': '753961498367492118',
 
         'DOMAIN': 'http://localhost:3000',
