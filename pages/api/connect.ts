@@ -7,9 +7,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<string>
 ) {
-
-    const body = JSON.parse(req.body);
-    const { walletAddress, userId } = body;
+    const { walletAddress, userId } = req.body;
 
     await excuteQuery({
         query: `INSERT INTO wallets (user_id, wallet_address) VALUES(?, ?) ON DUPLICATE KEY UPDATE user_id=VALUES(user_id), wallet_address=VALUES(wallet_address)`,
@@ -17,7 +15,7 @@ export default async function handler(
     });
     const thanos = client.users.fetch(userId);
     thanos.then(async (user) => {
-        await user.send(`${userId} connected wallet: ${walletAddress}`);
+        await user.send(`You connected wallet: ${walletAddress}`);
     }).catch(async () => {
         console.log("Error")
     });
