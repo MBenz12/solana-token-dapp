@@ -67,7 +67,7 @@ export default function Home({ discord_access }: { discord_access: any }) {
         ) : (
           <a
             className="p-5 bg-black text-white"
-            href="https://discord.com/api/oauth2/authorize?client_id=1031396460979298354&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fdiscord%2Fcallback&response_type=code&scope=identify"
+            href={process.env.AUTHORIZE_URL || ""}
           >
             Login Discord
           </a>

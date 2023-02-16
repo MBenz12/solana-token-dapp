@@ -13,6 +13,8 @@ const nextConfig = {
         'CLIENT_SECRET': 'jULuVveC7DtjXv1XKt4H1puL2wudEbXQ',
         'GUILD_ID': '980666668802007080',
 
+        'AUTHORIZE_URL': 'https://discord.com/api/oauth2/authorize?client_id=1074710904614166558&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fdiscord%2Fcallback&response_type=code&scope=identify',
+
         'DOMAIN': 'http://localhost:3000',
 
         'SPL_TOKEN_ADDRESS': 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
