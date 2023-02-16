@@ -9,11 +9,25 @@ export default async function handler(
 ) {
     const { walletAddress, userId } = req.body;
 
-    await excuteQuery({
-        query: `INSERT INTO wallets (user_id, wallet_address) VALUES(?, ?) ON DUPLICATE KEY UPDATE user_id=VALUES(user_id), wallet_address=VALUES(wallet_address)`,
-        values: [userId, walletAddress],
-    });
+    const resultQuery = await excuteQuery({
+        query: `SELECT * FROM wallets WHERE user_id=?`,
+        values: [userId]
+    })
+
     const thanos = await client.users.fetch(userId);
-    thanos.send(`You connected wallet: ${walletAddress}`);
+
+    if (resultQuery.length === 0) {
+        await excuteQuery({
+            query: `INSERT INTO wallets (user_id, wallet_address) VALUES(?, ?)`,
+            values: [userId, walletAddress],
+        });
+        thanos.send(`You connected wallet: ${walletAddress}`);
+    } else {
+        await excuteQuery({
+            query: `UPDATE wallets SET wallet_address=? WHERE user_id=?`,
+            values: [walletAddress, userId],
+        });
+        thanos.send(`You updated wallet: ${walletAddress}`);
+    }
     res.status(200).json("success")
 }
