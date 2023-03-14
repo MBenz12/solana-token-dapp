@@ -16,13 +16,13 @@ export default function handler(
         code: code,
         scope: "identify",
         grantType: "authorization_code",
-        redirectUri: "http://localhost:3000/api/discord/callback",
+        redirectUri: `${process.env.DOMAIN}/api/discord/callback`,
     }).then(value => {
         const cookie = serialize("discord_access", value.access_token, {
             httpOnly: true,
             path: "/",
         });
         res.setHeader("Set-Cookie", cookie);
-        res.redirect(`http://localhost:3000/connect`);
+        res.redirect(`${process.env.DOMAIN}/connect`);
     })
 }

@@ -28,7 +28,7 @@ export default function Home({ discord_access }: { discord_access: any }) {
           Authorization: `Bearer ${discord_access}`,
         },
       })
-      .then((value) => setUserId(value.data.id.toString()));
+      .then((value) => setUserId(value.data.id.toString())).catch(console.log);
   }
 
   const sendConnectedRequest = useCallback(
