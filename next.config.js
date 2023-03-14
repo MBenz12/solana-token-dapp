@@ -15,7 +15,7 @@ const nextConfig = {
 
         'AUTHORIZE_URL': 'https://discord.com/api/oauth2/authorize?client_id=1074710904614166558&redirect_uri=https%3A%2F%2Fpawn.zenstudios.xyz%2Fapi%2Fdiscord%2Fcallback&response_type=code&scope=identify',
 
-        'DOMAIN': 'http://pawn.zenstudios.xyz',
+        'DOMAIN': 'https://pawn.zenstudios.xyz',
 
         'SPL_TOKEN_ADDRESS': 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
         'SOLANA_DEVNET_RPC_URL': 'https://delicate-withered-theorem.solana-devnet.quiknode.pro/0399d35b8b5de1ba358bd014f584ba88d7709bcf/',
