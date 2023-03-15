@@ -10,7 +10,7 @@ export default async function handler(
 ) {
     const { userId, targetUserId, amount } = req.body;
     const result = await excuteQuery({
-        query: `SELECT user_id, wallet_address FROM wallets WHERE user_id=?`,
+        query: `SELECT wallet_address FROM wallets WHERE user_id=?`,
         values: [userId, targetUserId],
     }) as any;
     const thanos = await client.users.fetch(userId);
