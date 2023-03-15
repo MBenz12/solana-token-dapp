@@ -41,13 +41,13 @@ export default async function handler(
             query: `INSERT INTO wallets (user_id, wallet_address) VALUES(?, ?)`,
             values: [userId, walletAddress],
         }) as any;
-        if (res.error) res.status(500).json("Failed")
+        if (res.error) return res.status(500).json("Failed")
     } else {
         let res = await excuteQuery({
             query: `UPDATE wallets SET wallet_address=? WHERE user_id=?`,
             values: [walletAddress, userId],
         }) as any;
-        if (res.error) res.status(500).json("Failed")
+        if (res.error) return res.status(500).json("Failed")
     }
     await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress)}`);
     res.status(200).json("success")
