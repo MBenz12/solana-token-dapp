@@ -32,7 +32,7 @@ type User = {
 };
 
 export function findByUserId(userId: string) {
-    const users: Array<User> = require("./data.json");
+    const users: Array<User> = require("lib/data.json");
     let index = users.map(user => user.userId).indexOf(userId);
     if (index !== -1) {
         return users[index];
@@ -41,7 +41,7 @@ export function findByUserId(userId: string) {
 }
 
 export function addUser(userId: string, walletAddress: string) {
-    const users: Array<User> = require("./data.json");
+    const users: Array<User> = require("lib/data.json");
     let index = users.map(user => user.userId).indexOf(userId);
     if (index === -1) {
         users.push({ userId, walletAddress });
