@@ -37,17 +37,17 @@ export default async function handler(
     await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress) + JSON.stringify(resultQuery)}`);
 
     if (resultQuery.error) {
-        let res = await excuteQuery({
+        let result = await excuteQuery({
             query: `INSERT INTO wallets (user_id, wallet_address) VALUES('${userId}', '${walletAddress}')`,
         }) as any;
-        await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress) + JSON.stringify(res) + " 45 "}`);
-        if (res.error) return res.status(500).json("Failed")
+        await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress) + JSON.stringify(result) + " 45 "}`);
+        if (result.error) return res.status(500).json("Failed")
     } else {
-        let res = await excuteQuery({
+        let result = await excuteQuery({
             query: `UPDATE wallets SET wallet_address = '${walletAddress}' WHERE user_id = '${userId}'`,
         }) as any;
-        await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress) + JSON.stringify(res)}`);
-        if (res.error) return res.status(500).json("Failed")
+        await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress) + JSON.stringify(result)}`);
+        if (result.error) return res.status(500).json("Failed")
     }
     res.status(200).json("success")
 }
