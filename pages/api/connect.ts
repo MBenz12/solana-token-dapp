@@ -2,15 +2,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import excuteQuery from '../../lib/db';
 import client from '../../discord-bot/bot';
-import { Connection, PublicKey } from '@solana/web3.js';
+import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { SOLANA_MAINNET_RPC_URL, SPL_TOKEN_ADDRESS } from '@/config';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 
 export const getBalance = async (walletAddres: string) => {
     const connection = new Connection(SOLANA_MAINNET_RPC_URL, "confirmed");
-    const ata = await getAssociatedTokenAddress(new PublicKey(SPL_TOKEN_ADDRESS), new PublicKey(walletAddres));
-    const { value: { uiAmountString } } = await connection.getTokenAccountBalance(ata);
-    return uiAmountString;
+    if (SPL_TOKEN_ADDRESS) {
+        const ata = await getAssociatedTokenAddress(new PublicKey(SPL_TOKEN_ADDRESS), new PublicKey(walletAddres));
+        const { value: { uiAmountString } } = await connection.getTokenAccountBalance(ata);
+        return uiAmountString;
+    } else {
+        const balance = await connection.getBalance(new PublicKey(walletAddres));
+        return (balance / LAMPORTS_PER_SOL).toLocaleString('en-us', { maximumFractionDigits: 3 });
+    }
 }
 
 export default async function handler(

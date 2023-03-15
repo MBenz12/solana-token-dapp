@@ -6,7 +6,7 @@ import {
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
-import { PublicKey, Transaction } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { SPL_TOKEN_ADDRESS } from "@/config";
 import {
   getAssociatedTokenAddress,
@@ -26,30 +26,40 @@ export default function Home() {
       if (!wallet.publicKey) return;
 
       try {
-        const mint = new PublicKey(SPL_TOKEN_ADDRESS);
         const { data: walletAddress } = await axios.get(
           `/api/wallet/${target}`
         );
         const targetAddress = new PublicKey(walletAddress);
-        const { decimals } = await getMint(connection, mint);
-
-        const targetAta = await getAssociatedTokenAddress(mint, targetAddress);
-        const {
-          value: { uiAmount },
-        } = await connection.getTokenAccountBalance(targetAta);
-        if (uiAmount !== null) {
-          const transaction = new Transaction();
+        const transaction = new Transaction();
+        if (SPL_TOKEN_ADDRESS) {
+          const mint = new PublicKey(SPL_TOKEN_ADDRESS);
+          const { decimals } = await getMint(connection, mint);
+          const targetAta = await getAssociatedTokenAddress(mint, targetAddress);
+          const {
+            value: { uiAmount },
+          } = await connection.getTokenAccountBalance(targetAta);
+          if (uiAmount !== null) {
+            transaction.add(
+              createTransferCheckedInstruction(
+                wallet.publicKey,
+                mint,
+                targetAddress,
+                wallet.publicKey,
+                amount * Math.pow(10, decimals),
+                decimals
+              )
+            );
+          }
+        } else {
           transaction.add(
-            createTransferCheckedInstruction(
-              wallet.publicKey,
-              mint,
-              targetAddress,
-              wallet.publicKey,
-              amount * Math.pow(10, decimals),
-              decimals
-            )
-          );
-
+            SystemProgram.transfer({
+              fromPubkey: wallet.publicKey,
+              toPubkey: targetAddress,
+              lamports: amount * LAMPORTS_PER_SOL,
+            })
+          )
+        }
+        if (transaction.instructions.length) {
           const txSignature = await wallet.sendTransaction(
             transaction,
             connection
