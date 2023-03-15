@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 5000",
+    "dev": "next start -p 5000",
     "bot": "node discord-bot/bot.js",
     "launch": "run-p bot dev",
     "build": "next build",

@@ -42,7 +42,6 @@ export function findByUserId(userId: string) {
 
 export function addUser(userId: string, walletAddress: string) {
     const users: Array<User> = require("lib/data.json");
-    console.log(users);
     let index = users.map(user => user.userId).indexOf(userId);
     if (index === -1) {
         users.push({ userId, walletAddress });
