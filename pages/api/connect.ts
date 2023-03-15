@@ -35,7 +35,7 @@ export default async function handler(
             values: [userId]
         }) as any;
     
-        res.status(500).json(resultQuery);
+        res.status(500).json(resultQuery + "----38");
         const thanos = await client.users.fetch(userId);
     
         if (resultQuery && resultQuery.length === 0) {
