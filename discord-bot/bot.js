@@ -24,15 +24,23 @@ client.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === "connect-wallet") {
-      await interaction.reply(`${DOMAIN}/connect`);
+      try {
+        await interaction.reply(`${DOMAIN}/connect`);
+      } catch (error) {
+        
+      }
     }
     if (interaction.commandName === "transfer") {
       const userId = interaction.user.id;
       const targetUserId = interaction.options.get("user-id").value;
       const amount = interaction.options.get("amount").value;
-      await interaction.reply(
-        `${DOMAIN}/transfer/${userId}/${targetUserId.slice(2, -1)}/${amount}`
-      );
+      try {
+        await interaction.reply(
+          `${DOMAIN}/transfer/${userId}/${targetUserId.slice(2, -1)}/${amount}`
+        );
+      } catch (error) {
+        
+      }
     }
   } catch (error) {
     console.log(error);
