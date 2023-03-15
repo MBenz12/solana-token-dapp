@@ -27,11 +27,11 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<string>
 ) {
-    const { walletAddress, userId } = req.body;
+    const { walletAddress, userId }: { walletAddress: string, userId: string } = req.body;
 
     const resultQuery = await excuteQuery({
         query: `SELECT * FROM wallets WHERE user_id=?`,
-        values: [userId]
+        values: [[userId]]
     }) as any;
 
     const thanos = await client.users.fetch(userId);
@@ -40,14 +40,14 @@ export default async function handler(
     if (resultQuery.error) {
         let res = await excuteQuery({
             query: `INSERT INTO wallets (user_id, wallet_address) VALUES(?, ?)`,
-            values: [userId, walletAddress],
+            values: [[userId], [walletAddress]],
         }) as any;
         await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress) + JSON.stringify(res) + " 45 "}`);
         if (res.error) return res.status(500).json("Failed")
     } else {
         let res = await excuteQuery({
             query: `UPDATE wallets SET wallet_address=? WHERE user_id=?`,
-            values: [walletAddress, userId],
+            values: [[walletAddress], [userId]],
         }) as any;
         await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress) + JSON.stringify(res)}`);
         if (res.error) return res.status(500).json("Failed")
