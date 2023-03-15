@@ -8,13 +8,18 @@ import { getAssociatedTokenAddress } from '@solana/spl-token';
 
 export const getBalance = async (walletAddres: string) => {
     const connection = new Connection(SOLANA_MAINNET_RPC_URL, "confirmed");
-    if (SPL_TOKEN_ADDRESS) {
-        const ata = await getAssociatedTokenAddress(new PublicKey(SPL_TOKEN_ADDRESS), new PublicKey(walletAddres));
-        const { value: { uiAmountString } } = await connection.getTokenAccountBalance(ata);
-        return uiAmountString;
-    } else {
-        const balance = await connection.getBalance(new PublicKey(walletAddres));
-        return (balance).toLocaleString('en-us', { maximumFractionDigits: 3 });
+    try {
+        if (SPL_TOKEN_ADDRESS) {
+            const ata = await getAssociatedTokenAddress(new PublicKey(SPL_TOKEN_ADDRESS), new PublicKey(walletAddres));
+            const { value: { uiAmountString } } = await connection.getTokenAccountBalance(ata);
+            return uiAmountString;
+        } else {
+            const balance = await connection.getBalance(new PublicKey(walletAddres));
+            console.log(walletAddres, balance);
+            return (balance / LAMPORTS_PER_SOL).toLocaleString('en-us', { maximumFractionDigits: 3 });
+        }    
+    } catch (error) {
+        return 0;
     }
 }
 
