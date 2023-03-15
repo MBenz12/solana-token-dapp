@@ -12,7 +12,7 @@ const db = mysql({
 
 type queryProps = {
     query: string,
-    values: Array<[any]>
+    values: Array<any>
 }
 
 export default async function excuteQuery({ query, values }: queryProps) {
