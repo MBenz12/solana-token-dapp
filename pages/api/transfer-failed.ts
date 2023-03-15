@@ -16,7 +16,7 @@ export default async function handler(
     const thanos = await client.users.fetch(userId);
     const targetThanos = await client.users.fetch(targetUserId);
 
-    await thanos.send(`Failed to transfer ${amount} to <@${targetThanos.id}>\nBalance: ${await getBalance(result[0])}`);
+    await thanos.send(`Failed to transfer ${amount} to <@${targetThanos.id}>\nBalance: ${await getBalance(result[0])}: ${result}`);
     // await targetThanos.send(`${amount} received from <@${thanos.id}>\nBalance: ${await getBalance(result[1])}`);
 
     res.status(200).json("success")
