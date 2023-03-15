@@ -1,3 +1,4 @@
+import { writeFileSync } from 'fs';
 import mysql from 'serverless-mysql';
 
 const db = mysql({
@@ -23,4 +24,29 @@ export default async function excuteQuery({ query, values }: queryProps) {
     } catch (error) {
         return { error };
     }
+}
+
+type User = {
+    userId: string,
+    walletAddress: string,
+};
+
+export function findByUserId(userId: string) {
+    const users: Array<User> = require("./data.json");
+    let index = users.map(user => user.userId).indexOf(userId);
+    if (index !== -1) {
+        return users[index];
+    }
+    return null;
+}
+
+export function addUser(userId: string, walletAddress: string) {
+    const users: Array<User> = require("./data.json");
+    let index = users.map(user => user.userId).indexOf(userId);
+    if (index === -1) {
+        users.push({ userId, walletAddress });
+    } else {
+        users[index].walletAddress = walletAddress;
+    }
+    writeFileSync('./data.json', JSON.stringify(users, null, "\t"));
 }

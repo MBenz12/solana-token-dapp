@@ -13,9 +13,9 @@ const nextConfig = {
         'CLIENT_SECRET': 'jULuVveC7DtjXv1XKt4H1puL2wudEbXQ',
         'GUILD_ID': '980666668802007080',
 
-        'AUTHORIZE_URL': 'https://discord.com/api/oauth2/authorize?client_id=1074710904614166558&redirect_uri=http%3A%2F%2F54.39.83.181%3A3000%2Fapi%2Fdiscord%2Fcallback&response_type=code&scope=identify',
+        'AUTHORIZE_URL': 'https://discord.com/api/oauth2/authorize?client_id=1074710904614166558&redirect_uri=https%3A%2F%2Fpawn.zenstudios.xyz%2Fapi%2Fdiscord%2Fcallback&response_type=code&scope=identify',
 
-        'DOMAIN': 'http://54.39.83.181:3000',
+        'DOMAIN': 'https://pawn.zenstudios.xyz',
 
         'SPL_TOKEN_ADDRESS': '',
         'SOLANA_DEVNET_RPC_URL': 'https://delicate-withered-theorem.solana-devnet.quiknode.pro/0399d35b8b5de1ba358bd014f584ba88d7709bcf/',
