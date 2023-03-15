@@ -25,28 +25,33 @@ export const getBalance = async (walletAddres: string) => {
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<string>
+    res: NextApiResponse<string | {}>
 ) {
-    const { walletAddress, userId } = req.body;
-
-    const resultQuery = await excuteQuery({
-        query: `SELECT * FROM wallets WHERE user_id=?`,
-        values: [userId]
-    }) as any;
-
-    const thanos = await client.users.fetch(userId);
-
-    if (resultQuery && resultQuery.length === 0) {
-        await excuteQuery({
-            query: `INSERT INTO wallets (user_id, wallet_address) VALUES(?, ?)`,
-            values: [userId, walletAddress],
-        });
-    } else {
-        await excuteQuery({
-            query: `UPDATE wallets SET wallet_address=? WHERE user_id=?`,
-            values: [walletAddress, userId],
-        });
+    try {
+        const { walletAddress, userId } = req.body;
+    
+        const resultQuery = await excuteQuery({
+            query: `SELECT * FROM wallets WHERE user_id=?`,
+            values: [userId]
+        }) as any;
+    
+        res.status(500).json(resultQuery);
+        const thanos = await client.users.fetch(userId);
+    
+        if (resultQuery && resultQuery.length === 0) {
+            await excuteQuery({
+                query: `INSERT INTO wallets (user_id, wallet_address) VALUES(?, ?)`,
+                values: [userId, walletAddress],
+            });
+        } else {
+            await excuteQuery({
+                query: `UPDATE wallets SET wallet_address=? WHERE user_id=?`,
+                values: [walletAddress, userId],
+            });
+        }
+        await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress)}`);
+        res.status(200).json("success")
+    } catch (error) {
+        res.status(500).json({error});
     }
-    await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress)}`);
-    res.status(200).json("success")
 }
