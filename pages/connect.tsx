@@ -59,14 +59,14 @@ export default function Home({ discord_access }: { discord_access: any }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="min-h-screen flex items-center justify-center">
+      <main className="min-h-screen flex items-center justify-center bg-black">
         {discord_access ? (
           <div>
             {!wallet.publicKey ? <WalletModalButton /> : <WalletMultiButton />}
           </div>
         ) : (
           <a
-            className="p-5 bg-black text-white"
+            className="p-5 bg-white text-black"
             href={process.env.AUTHORIZE_URL || ""}
           >
             Login Discord

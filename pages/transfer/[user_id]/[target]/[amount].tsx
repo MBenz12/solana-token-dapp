@@ -75,6 +75,11 @@ export default function Home() {
         }
       } catch (error) {
         console.log(error);
+        await axios.post("/api/transfer-failed", {
+          userId,
+          amount,
+          targetUserId: target,
+        });
       }
     },
     [wallet, connection, userId]
@@ -94,7 +99,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="min-h-screen flex items-center justify-center">
+      <main className="min-h-screen flex items-center justify-center bg-black">
         <div className="flex">
           {!wallet.publicKey ? <WalletModalButton /> : <WalletMultiButton />}
         </div>
