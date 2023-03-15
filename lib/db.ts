@@ -48,5 +48,5 @@ export function addUser(userId: string, walletAddress: string) {
     } else {
         users[index].walletAddress = walletAddress;
     }
-    writeFileSync('./data.json', JSON.stringify(users, null, "\t"));
+    writeFileSync('lib/data.json', JSON.stringify(users, null, "\t"));
 }
