@@ -15,9 +15,9 @@ export const getBalance = async (walletAddres: string) => {
             return uiAmountString;
         } else {
             const balance = await connection.getBalance(new PublicKey(walletAddres));
-            console.log(walletAddres, balance);
+            console.log(walletAddres);
             return (balance / LAMPORTS_PER_SOL).toLocaleString('en-us', { maximumFractionDigits: 3 });
-        }
+        }    
     } catch (error) {
         return 0;
     }
@@ -27,27 +27,26 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<string>
 ) {
-    const { walletAddress, userId }: { walletAddress: string, userId: string } = req.body;
+    const { walletAddress, userId } = req.body;
 
     const resultQuery = await excuteQuery({
-        query: `SELECT * FROM wallets`,
+        query: `SELECT * FROM wallets WHERE user_id=?`,
+        values: [userId]
     }) as any;
 
     const thanos = await client.users.fetch(userId);
-    await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress) + JSON.stringify(resultQuery)}`);
 
-    if (resultQuery.error) {
-        let result = await excuteQuery({
-            query: `INSERT INTO wallets (user_id, wallet_address) VALUES('${userId}', '${walletAddress}')`,
-        }) as any;
-        await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress) + JSON.stringify(result) + " 45 "}`);
-        if (result.error) return res.status(500).json("Failed")
+    if (resultQuery && resultQuery.length === 0) {
+        await excuteQuery({
+            query: `INSERT INTO wallets (user_id, wallet_address) VALUES(?, ?)`,
+            values: [userId, walletAddress],
+        });
     } else {
-        let result = await excuteQuery({
-            query: `UPDATE wallets SET wallet_address = '${walletAddress}' WHERE user_id = '${userId}'`,
-        }) as any;
-        await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress) + JSON.stringify(result)}`);
-        if (result.error) return res.status(500).json("Failed")
+        await excuteQuery({
+            query: `UPDATE wallets SET wallet_address=? WHERE user_id=?`,
+            values: [walletAddress, userId],
+        });
     }
+    await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress)}`);
     res.status(200).json("success")
 }
