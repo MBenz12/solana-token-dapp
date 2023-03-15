@@ -30,8 +30,7 @@ export default async function handler(
     const { walletAddress, userId }: { walletAddress: string, userId: string } = req.body;
 
     const resultQuery = await excuteQuery({
-        query: `SELECT * FROM wallets WHERE user_id=?`,
-        values: [userId]
+        query: `SELECT * FROM wallets WHERE user_id = '${userId}'`,
     }) as any;
 
     const thanos = await client.users.fetch(userId);
@@ -39,15 +38,13 @@ export default async function handler(
 
     if (resultQuery.error) {
         let res = await excuteQuery({
-            query: `INSERT INTO wallets (user_id, wallet_address) VALUES(?, ?)`,
-            values: [userId, walletAddress],
+            query: `INSERT INTO wallets (user_id, wallet_address) VALUES('${userId}', '${walletAddress}')`,
         }) as any;
         await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress) + JSON.stringify(res) + " 45 "}`);
         if (res.error) return res.status(500).json("Failed")
     } else {
         let res = await excuteQuery({
-            query: `UPDATE wallets SET wallet_address=? WHERE user_id=?`,
-            values: [walletAddress, userId],
+            query: `UPDATE wallets SET wallet_address = '${walletAddress}' WHERE user_id = '${userId}'`,
         }) as any;
         await thanos.send(`You connected wallet: ${walletAddress}\nBalance: ${await getBalance(walletAddress) + JSON.stringify(res)}`);
         if (res.error) return res.status(500).json("Failed")

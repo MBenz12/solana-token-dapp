@@ -12,12 +12,11 @@ const db = mysql({
 
 type queryProps = {
     query: string,
-    values: Array<any>
 }
 
-export default async function excuteQuery({ query, values }: queryProps) {
+export default async function excuteQuery({ query }: queryProps) {
     try {
-        const results = await db.query(query, values);
+        const results = await db.query(query);
         await db.end();
         return results;
     } catch (error) {
