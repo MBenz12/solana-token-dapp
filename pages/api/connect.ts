@@ -14,7 +14,7 @@ export const getBalance = async (walletAddres: string) => {
         return uiAmountString;
     } else {
         const balance = await connection.getBalance(new PublicKey(walletAddres));
-        return (balance / LAMPORTS_PER_SOL).toLocaleString('en-us', { maximumFractionDigits: 3 });
+        return (balance).toLocaleString('en-us', { maximumFractionDigits: 3 });
     }
 }
 
