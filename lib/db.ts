@@ -16,11 +16,11 @@ type queryProps = {
 
 export default async function excuteQuery({ query }: queryProps) {
     try {
-        await db.connect()
         const results = await db.query(query);
         await db.end();
         return results;
     } catch (error) {
+        console.log(error)
         return { error };
     }
 }
